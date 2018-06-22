@@ -1,0 +1,41 @@
+{
+  "name": "toc-me",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Philip Holleran <pholleran@github.com>",
+  "license": "ISC",
+  "repository": "https://github.com/pholleran-org/toc-me.git",
+  "homepage": "https://github.com/pholleran-org/toc-me",
+  "bugs": "https://github.com/pholleran-org/toc-me/issues",
+  "keywords": [
+    "probot",
+    "github",
+    "probot-app"
+  ],
+  "scripts": {
+    "dev": "nodemon --exec \"npm start\"",
+    "start": "probot run ./index.js",
+    "lint": "standard --fix",
+    "test": "jest && standard",
+    "test:watch": "jest --watch --notify --notifyMode=change --coverage"
+  },
+  "dependencies": {
+    "markdown-toc": "^1.2.0",
+    "probot": "^6.0.0",
+    "remarkable": "^1.7.1"
+  },
+  "devDependencies": {
+    "jest": "^22.4.3",
+    "nodemon": "^1.17.2",
+    "smee-client": "^1.0.1",
+    "standard": "^10.0.3"
+  },
+  "engines": {
+    "node": ">= 8.3.0"
+  },
+  "standard": {
+    "env": [
+      "jest"
+    ]
+  }
+}
