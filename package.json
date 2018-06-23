@@ -22,6 +22,7 @@
   "dependencies": {
     "markdown-toc": "^1.2.0",
     "probot": "^6.0.0",
+    "probot-config": "^0.1.0",
     "remarkable": "^1.7.1"
   },
   "devDependencies": {
