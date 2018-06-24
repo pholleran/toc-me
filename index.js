@@ -5,7 +5,6 @@ const path = require('path')
 module.exports = robot => {
   robot.on('push', async context => {
     
-    const markdownFiles = {}
     const push = context.payload
 
     const compare = await context.github.repos.compareCommits(context.repo({
