@@ -1,10 +1,32 @@
-// You can import your modules
-// const index = require('../index')
+const expect = require('expect')
+const {createRobot} = require('probot')
+const plugin = require('../index')
 
-test('that we can run tests', () => {
-  // your real tests go here
-  expect(1 + 2 + 3).toBe(6)
+describe('plugin', () => {
+  let robot
+  let event
+  let sync
+
+  beforeEach(() => {
+    robot = createRobot()
+    robot.auth = () => Promise.resolve({})
+
+    sync = jest.fn()
+
+    plugin(robot, {}, {sync, FILE_NAME: '.github/toc.yml'})
+  })
+
+  describe('when a push contains markdown files', () => {
+
+    // it generates a TOC for files with a '<!-- toc '
+
+    // it ignores markdown files without a '<!-- toc '
+
+    // it handles uppercase `.MD` extensions
+
+  })
+
+  describe('when a push does not contain markdown files', () => {
+
+  })
 })
-
-// For more information about testing with Jest see:
-// https://facebook.github.io/jest/
