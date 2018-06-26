@@ -1,4 +1,4 @@
-var toc = require('markdown-toc')
+const toc = require('markdown-toc')
 const getConfig = require('probot-config')
 const path = require('path')
 
@@ -25,9 +25,9 @@ module.exports = robot => {
 
         if (text.includes('<!-- toc ')) {
           let config = await getConfig(context, 'toc.yml')
-          var updated = toc.insert(text, config)
+          let updated = toc.insert(text, config)
           
-          if (updated) {
+          if (updated != text) {
             context.github.repos.updateFile(context.repo({
               path: file.filename,
               message: `Update ToC for ${file.filename}`,
