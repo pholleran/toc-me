@@ -1,0 +1,11 @@
+# Comment to be posted to on first time issues
+newIssueWelcomeComment: >
+  Welcome! Thanks for opening your first issue in `toc-me`.
+  
+# Comment to be posted to on PRs from first time contributors in your repository
+newPRWelcomeComment: >
+  Thanks for opening your first pull request to `toc-me`!
+  
+# Comment to be posted to on pull requests merged by a first time user
+firstPRMergeComment: >
+  Congrats on merging your first pull request!
