@@ -6,21 +6,30 @@ module.exports = robot => {
   robot.on('push', async context => {
     
     let push = context.payload
-
-    let compare = await context.github.repos.compareCommits(context.repo({
-      base: push.before,
-      head: push.after
+    
+    let compare 
+    
+    if(push.before != '0000000000000000000000000000000000000000'){
+      compare = await context.github.repos.compareCommits(context.repo({
+        base: push.before,
+        head: push.after
     }))
+    } else {
+      compare = await context.github.repos.getCommit(context.repo({
+        sha: push.after
+      }))
+    }
 
     let branch = push.ref.replace('refs/heads/', '')
 
     return Promise.all(compare.data.files.map(async file => {
+      
       if (path.extname(file.filename).toLowerCase() == '.md'){
         let content = await context.github.repos.getContent(context.repo({
           path: file.filename,
           ref:branch
         }))
-
+        
         let text = Buffer.from(content.data.content, 'base64').toString()
 
         // check if markdown includes the markdown-toc comment formatting
