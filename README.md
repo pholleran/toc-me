@@ -22,7 +22,9 @@ Follow the instructions in the [probot documentation](https://probot.github.io/d
 
 Edit your markdown file to include the following line where you would like the ToC inserted:
 
-<img width="592" alt="image" src="https://user-images.githubusercontent.com/4007128/41919459-28d803d8-7924-11e8-874c-69a1f157d1b7.png">
+```
+<!-- toc -->
+```
 
 #### Updating an existing TOC
 
