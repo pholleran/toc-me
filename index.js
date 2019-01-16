@@ -43,7 +43,7 @@ module.exports = robot => {
           // toc.insert() adds a trailing newline character we need to remove
           let updated = toc.insert(text, config)
 
-          if (updated != text) {
+          if (updated !== text) {
             context.github.repos.updateFile(context.repo({
               path: file.filename,
               message: `Update ToC for ${file.filename}`,
