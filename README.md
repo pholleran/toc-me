@@ -12,7 +12,7 @@ This app examines each push operation for markdown files formatted to use `markd
 
 ### Deploy and configure the app
 
-Follow the instructions in the [probot documentation](https://probot.github.io/docs/deployment/) to deploy your own version of `toc-me`
+The [probot deployment docs](https://probot.github.io/docs/deployment/) can be followed to deploy your own version of `toc-me`. You will need to define an additional environment variable `APP_NAME` and populate it with the exact name of your GitHub App.
 
 ### Configuring markdown files for TOC
 
@@ -42,7 +42,7 @@ append: 'this string will be appended to the end of the ToC'
 
 ## Contributing
 
-If you have suggestions for how toc-me could be improved, or want to report a bug, open an issue! We'd love all and any contributions.
+If you have suggestions for how `toc-me` could be improved, or want to report a bug, open an issue! We'd love all and any contributions.
 
 For more, check out the [Contributing Guide](CONTRIBUTING.md).
 
