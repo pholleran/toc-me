@@ -39,10 +39,12 @@ module.exports = robot => {
             let config = await getConfig(context, 'toc.yml')
             let updated = toc.insert(text, config)
 
-            // check to see if original text already ended in a newline char
-            // if so remove the additional one added by markdown-toc
-            if (text.slice(-1) === '\n') {
-              updated = updated.slice(0, -1)
+            console.log("last updated: " + updated.slice(-1))
+
+            // check to see if updated file ends in a newline
+            // if not, add one
+            if (updated.slice(-1) !== '\n') {
+              updated = updated + '\n'
             }
 
             // update the file
