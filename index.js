@@ -1,48 +1,51 @@
 const toc = require('markdown-toc')
 const getConfig = require('probot-config')
 const path = require('path')
+const appUser = process.env.APP_NAME + '[bot]'
 
 module.exports = robot => {
   robot.on('push', async context => {
     let push = context.payload
 
-    let compare
+    // don't run toc-me if the last commit was pushed by toc-me
+    if (push.pusher.name !== appUser) {
+      let compare
+      let branch = push.ref.replace('refs/heads/', '')
 
-    if (push.before !== '0000000000000000000000000000000000000000') {
-      compare = await context.github.repos.compareCommits(context.repo({
-        base: push.before,
-        head: push.after
-      }))
-    } else {
-      compare = await context.github.repos.getCommit(context.repo({
-        sha: push.after
-      }))
-    }
-
-    let branch = push.ref.replace('refs/heads/', '')
-
-    return Promise.all(compare.data.files.map(async file => {
-      if (path.extname(file.filename).toLowerCase() === '.md') {
-        let content = await context.github.repos.getContent(context.repo({
-          path: file.filename,
-          ref: branch
+      if (push.before !== '0000000000000000000000000000000000000000') {
+        compare = await context.github.repos.compareCommits(context.repo({
+          base: push.before,
+          head: push.after
         }))
+      } else {
+        compare = await context.github.repos.getCommit(context.repo({
+          sha: push.after
+        }))
+      }
 
-        let text = Buffer.from(content.data.content, 'base64').toString()
+      // for each file in the commit
+      return Promise.all(compare.data.files.map(async file => {
+        if (path.extname(file.filename).toLowerCase() === '.md') {
+          let content = await context.github.repos.getContent(context.repo({
+            path: file.filename,
+            ref: branch
+          }))
 
-        // check if markdown includes the markdown-toc comment formatting
-        if (text.includes('<!-- toc ')) {
-          let config = await getConfig(context, 'toc.yml')
-          let updated = toc.insert(text, config)
+          // grab the file content
+          let text = Buffer.from(content.data.content, 'base64').toString()
 
-          // toc.insert() adds a trailing newline character every time it is run
-          // we need to remove if the file already ends in one
-          // otherwise an infinite loop of newline commits can occur
-          if (text.slice(-1) === '\n') {
-            updated = updated.slice(0, -1)
-          }
+          // check if markdown includes the markdown-toc comment formatting
+          if (text.includes('<!-- toc ')) {
+            let config = await getConfig(context, 'toc.yml')
+            let updated = toc.insert(text, config)
 
-          if (updated !== text) {
+            // check to see if original text already ended in a newline char
+            // if so remove the additional one added by markdown-toc
+            if (text.slice(-1) === '\n') {
+              updated = updated.slice(0, -1)
+            }
+
+            // update the file
             context.github.repos.updateFile(context.repo({
               path: file.filename,
               message: `Update ToC for ${file.filename}`,
@@ -52,7 +55,7 @@ module.exports = robot => {
             }))
           }
         }
-      }
-    }))
+      }))
+    }
   })
 }
