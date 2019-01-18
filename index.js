@@ -39,8 +39,6 @@ module.exports = robot => {
             let config = await getConfig(context, 'toc.yml')
             let updated = toc.insert(text, config)
 
-            console.log("last updated: " + updated.slice(-1))
-
             // check to see if updated file ends in a newline
             // if not, add one
             if (updated.slice(-1) !== '\n') {
