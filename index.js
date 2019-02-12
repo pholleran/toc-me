@@ -46,7 +46,7 @@ module.exports = robot => {
             }
 
             // update the file
-            context.github.repos.updateFile(context.repo({
+            await context.github.repos.updateFile(context.repo({
               path: file.filename,
               message: `Update ToC for ${file.filename}`,
               content: Buffer.from(updated).toString('base64'),
