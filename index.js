@@ -24,9 +24,10 @@ module.exports = robot => {
       }
 
       // for each file in the commit
-      return Promise.all(compare.data.files.map(async file => {
+      /// return Promise.all(compare.data.files.map(async file => {
+      for (const file of compare.data.files) {
         if (path.extname(file.filename).toLowerCase() === '.md') {
-          let content = await context.github.repos.getContent(context.repo({
+          let content = await context.github.repos.getContents(context.repo({
             path: file.filename,
             ref: branch
           }))
@@ -37,7 +38,7 @@ module.exports = robot => {
           // check if markdown includes the markdown-toc comment formatting
           if (text.includes('<!-- toc ')) {
             let config = await getConfig(context, 'toc.yml')
-            let updated = toc.insert(text, config)
+            let updated = await toc.insert(text, config)
 
             // check to see if updated file ends in a newline
             // if not, add one
@@ -55,7 +56,7 @@ module.exports = robot => {
             }))
           }
         }
-      }))
+      }
     }
   })
 }

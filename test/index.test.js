@@ -6,13 +6,18 @@ const _ = require('lodash')
 
 // Requiring our fixtures
 const tocFormatterAdded = require('./fixtures/push.toc_formatter_added')
+const tocsSectionAdded = require('./fixtures/push.toc_section_added')
+
 const commits = require('./fixtures/commits.get_df298')
+const compareCommits = require('./fixtures/compare.86f502_105088')
+
 const readmeContents = require('./fixtures/contents.get_README.md')
+const readmeSectionAddedContents = require('./fixtures/contents.get_README.section_added.md')
 const configContents = require('./fixtures/contents.get_toc.yml')
 
 nock.disableNetConnect()
 
-describe('My Probot app', async () => {
+describe('Test toc-me', async () => {
   let probot
 
   beforeEach(() => {
@@ -23,17 +28,11 @@ describe('My Probot app', async () => {
     app.app = () => 'test'
   })
 
-  test('creates a new toc when one does not exist', async() => {
+  test('creates a new toc when one does not exist', async () => {
     // mock an installation token
     nock('https://api.github.com')
-      .log(console.log)
       .post('/app/installations/240195/access_tokens')
       .reply(200, { token: 'test' })
-
-    // mock the compare commit endpoint
-    nock('https://api.github.com')
-      .get('/repos/pholleran/test-toc-me/compare/0000000000000000000000000000000000000000...df298f9a4ddca521f91a1d448e4e409ef56118bf')
-      .reply(200)
 
     // mock the get commit endpoint
     nock('https://api.github.com')
@@ -52,9 +51,38 @@ describe('My Probot app', async () => {
 
     // mock the request to pudate the readme
     nock('https://api.github.com')
-      .put('/repos/pholleran/test-toc-me/contents/README.md', _.matches({sha: "bd41e069baf05250d85060f6694adfdc40f1222f"}))
+      .put('/repos/pholleran/test-toc-me/contents/README.md', _.matches({sha: 'bd41e069baf05250d85060f6694adfdc40f1222f'}))
       .reply(200)
 
-    await probot.receive({name: 'push', payload: tocFormatterAdded})
+    await probot.receive({name: 'push', payload: tocFormatterAdded}, 20000)
+  })
+
+  test('updates a toc when the formatted markdown doc is updated', async () => {
+    // mock an installation token
+    nock('https://api.github.com')
+      .post('/app/installations/240195/access_tokens')
+      .reply(200, { token: 'test' })
+
+    // mock the compare endpoint
+    nock('https://api.github.com')
+      .get('/repos/pholleran/test-toc-me/compare/86f502275b69a4b69776500d2caf976cb70fc3d8...105058844eaf752072bfc9c9cfa13f106188f488')
+      .reply(200, compareCommits)
+
+    // mock the request for the markdown file
+    nock('https://api.github.com')
+      .get('/repos/pholleran/test-toc-me/contents/README.md?ref=add-toc')
+      .reply(200, readmeSectionAddedContents)
+
+    // mock the request for the yaml config
+    nock('https://api.github.com')
+      .get('/repos/pholleran/test-toc-me/contents/.github/toc.yml')
+      .reply(200, configContents)
+
+    // mock the request to pudate the readme
+    nock('https://api.github.com')
+      .put('/repos/pholleran/test-toc-me/contents/README.md', _.matches({sha: '81a96f0bf2eeea910c1b6bb1b16300979c919c2f'}))
+      .reply(200)
+
+    await probot.receive({name: 'push', payload: tocsSectionAdded}, 20000)
   })
 })
