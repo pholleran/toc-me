@@ -7,15 +7,18 @@ const _ = require('lodash')
 // Requiring our fixtures
 const tocFormatterAdded = require('./fixtures/push.toc_formatter_added')
 const tocsSectionAdded = require('./fixtures/push.toc_section_added')
+const noTocUpdate = require('./fixtures/push.no_toc_update')
 const noToc = require('./fixtures/push.no_toc')
 
 const commits = require('./fixtures/commits.get_df298')
 const compareCommits = require('./fixtures/compare.86f502_105088')
 const compareCommitsNoToc = require('./fixtures/compare.5af90a_508e83')
+const compareNoTocUpdate = require('./fixtures/compare.2f701d_f21142')
 
 const readmeContents = require('./fixtures/contents.get_README.md')
-const readmeSectionAddedContents = require('./fixtures/contents.get_README.section_added.md')
+const readmeSectionAddedContents = require('./fixtures/contents.get_README.section_added')
 const noTocContents = require('./fixtures/contents.get_no-toc.md')
+const noTocUpdateContents = require('./fixtures/contents.get_README.noTocUpdate')
 const configContents = require('./fixtures/contents.get_toc.yml')
 
 nock.disableNetConnect()
@@ -52,7 +55,7 @@ describe('Test toc-me', async () => {
       .get('/repos/pholleran/test-toc-me/contents/.github/toc.yml')
       .reply(200, configContents)
 
-    // mock the request to pudate the readme
+    // mock the request to update the readme
     nock('https://api.github.com')
       .put('/repos/pholleran/test-toc-me/contents/README.md', _.matches({sha: 'bd41e069baf05250d85060f6694adfdc40f1222f'}))
       .reply(200)
@@ -99,12 +102,37 @@ describe('Test toc-me', async () => {
     nock('https://api.github.com')
       .get('/repos/pholleran/test-toc-me/compare/5af90a02b23e47df467d0a3f2b2dc2bd0433265e...508e833d9dc61783b7ab1f7675f433fa04ca6e33')
       .reply(200, compareCommitsNoToc)
-  
+
     // mock the request for the markdown file
     nock('https://api.github.com')
       .get('/repos/pholleran/test-toc-me/contents/no-toc.md?ref=no-update')
       .reply(200, noTocContents)
 
     await probot.receive({name: 'push', payload: noToc}, 20000)
+  })
+
+  // test that pushing something that shouldn't change the TOC doesn't push an empty commit
+  test('does not push a commit when no TOC update has occured', async () => {
+    // mock an installation token
+    nock('https://api.github.com')
+      .post('/app/installations/240195/access_tokens')
+      .reply(200, { token: 'test' })
+
+    // mock the compare endpoint
+    nock('https://api.github.com')
+      .get('/repos/pholleran/test-toc-me/compare/2f701d2f891a3d33c2c7cd4c985097e8eac885af...f2114235476a6a20c68a6d7e934b89ec9c03ed89')
+      .reply(200, compareNoTocUpdate)
+
+    // mock the request for the markdown file
+    nock('https://api.github.com')
+      .get('/repos/pholleran/test-toc-me/contents/README.md?ref=new-ui-no-toc-change')
+      .reply(200, noTocUpdateContents)
+
+    // mock the request for the yaml config
+    nock('https://api.github.com')
+      .get('/repos/pholleran/test-toc-me/contents/.github/toc.yml')
+      .reply(200, configContents)
+
+    await probot.receive({name: 'push', payload: noTocUpdate}, 20000)
   })
 })

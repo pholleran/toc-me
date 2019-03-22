@@ -46,14 +46,16 @@ module.exports = robot => {
               updated = updated + '\n'
             }
 
-            // update the file
-            await context.github.repos.updateFile(context.repo({
-              path: file.filename,
-              message: `Update ToC for ${file.filename}`,
-              content: Buffer.from(updated).toString('base64'),
-              sha: content.data.sha,
-              branch
-            }))
+            // update the file if TOC has changed
+            if (updated !== text) {
+              await context.github.repos.updateFile(context.repo({
+                path: file.filename,
+                message: `Update ToC for ${file.filename}`,
+                content: Buffer.from(updated).toString('base64'),
+                sha: content.data.sha,
+                branch
+              }))
+            }
           }
         }
       }
