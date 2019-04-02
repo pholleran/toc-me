@@ -13,7 +13,7 @@ const noToc = require('./fixtures/push.no_toc')
 const commits = require('./fixtures/commits.get_df298')
 const compareCommits = require('./fixtures/compare.86f502_105088')
 const compareCommitsNoToc = require('./fixtures/compare.5af90a_508e83')
-const compareNoTocUpdate = require('./fixtures/compare.2f701d_f21142')
+const compareNoTocUpdate = require('./fixtures/compare.a15c44_e4d124')
 
 const readmeContents = require('./fixtures/contents.get_README.md')
 const readmeSectionAddedContents = require('./fixtures/contents.get_README.section_added')
