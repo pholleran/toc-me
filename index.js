@@ -43,7 +43,7 @@ module.exports = robot => {
             // markdown-toc will sometimes add an additional newline character
             // this checks to see if it has happened and removes it
             if (updated.charAt((updated.length) - 2) === '\n') {
-              updated = updated.slice(0,-1)
+              updated = updated.slice(0, -1)
             }
 
             // if the resulting file does not end in a newline character, add one
