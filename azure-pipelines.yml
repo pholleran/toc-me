@@ -1,0 +1,13 @@
+pool:
+  vmImage: 'ubuntu-16.04'
+
+steps:
+- task: NodeTool@0 
+  inputs:
+    versionSpec: '10.1.0' 
+- script: npm install
+- script: npm test --ci --reporters=default --reporters=jest-junit
+- task: PublishTestResults@2
+  inputs:
+    testRunner: JUnit
+    testResultsFiles: ./test-results.xml
