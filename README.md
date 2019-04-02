@@ -1,6 +1,9 @@
+[![Build Status](https://dev.azure.com/pholleran/toc-me/_apis/build/status/toc-me-CI?branchName=master)](https://dev.azure.com/pholleran/toc-me/_build/latest?definitionId=6&branchName=master)
+
 # toc-me
 
 > A GitHub App built with [Probot](https://github.com/probot/probot) that runs [markdown-toc](https://github.com/jonschlinkert/markdown-toc)
+
 
 ## Overview
 
