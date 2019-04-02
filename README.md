@@ -4,7 +4,6 @@
 
 > A GitHub App built with [Probot](https://github.com/probot/probot) that runs [markdown-toc](https://github.com/jonschlinkert/markdown-toc)
 
-
 ## Overview
 
 Teams often use GitHub to manage documentation. As that documentation grows navigation can become a challenge, leading to the addition of a table of contents (ToC). As the documentation is modified team members must take care to ensure the ToC links are properly nested and formatted, which can create a barrier to contribution.
