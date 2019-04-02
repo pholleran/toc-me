@@ -120,12 +120,12 @@ describe('Test toc-me', async () => {
 
     // mock the compare endpoint
     nock('https://api.github.com')
-      .get('/repos/pholleran/test-toc-me/compare/2f701d2f891a3d33c2c7cd4c985097e8eac885af...f2114235476a6a20c68a6d7e934b89ec9c03ed89')
+      .get('/repos/pholleran/test-toc-me/compare/a15c4483af9366cf9ae61a669c289e41d526c882...e4d124cd8bc9d7c51501076ce3560f7d7b645fdd')
       .reply(200, compareNoTocUpdate)
 
     // mock the request for the markdown file
     nock('https://api.github.com')
-      .get('/repos/pholleran/test-toc-me/contents/README.md?ref=new-ui-no-toc-change')
+      .get('/repos/pholleran/test-toc-me/contents/README.md?ref=testing')
       .reply(200, noTocUpdateContents)
 
     // mock the request for the yaml config
